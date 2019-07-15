@@ -2,29 +2,39 @@ using System;
 using System.Linq;
 namespace VersionUpdater
 {
-    class VersionStringParser
+    public class VersionStringParser
     {
-        public static bool TryParse(string input, out string versionString)
+        public ParsedVersionString Parse(string input)
         {
-            versionString = "";
             if (string.IsNullOrWhiteSpace(input))
-                return false;
+                return new ParsedVersionString() {InvalidReason="Input is empty"};
+            
 
-            var versionParts = input.Split(".");
-            var versionPartValidator = new VersionPartValidator();
-            return versionParts.Aggregate(, (isValid, versionPart) => versionPartValidator.IsValid(versionPart));
+            var versionParts = input.Split('.');
+            if(versionParts.Length!=4)
+                return new ParsedVersionString() {InvalidReason="Post split length is not 4"};
 
-        }
-    }
+            if (!int.TryParse(versionParts[0],out var _))
+                return new ParsedVersionString() {InvalidReason="Major version has to be Int"};
+            
+            var versionPartValidator = new VersionPartParser();
+            var parsedVersionString = new ParsedVersionString() {}; 
+            foreach (var versionPart in versionParts)
+            {
 
-    internal class VersionPartValidator
-    {
-        public bool IsValid(string versionPart)
-        {
-            if (string.IsNullOrWhiteSpace(versionPart))
-                return false;
-            if (Int32.TryParse(versionPart, out int versionNumber))
-                return true;
+                var parsedPart = versionPartValidator.Parse(versionPart);
+                if (parsedPart ==null)
+                {
+                    parsedVersionString.IsValid = false;
+                    parsedVersionString.InvalidReason = @"{versionPart} is invalid";
+                    return parsedVersionString;
+                }
+                
+                parsedVersionString.IsValid = true;
+                parsedVersionString.VersionParts.Add(parsedPart);
+            }
+
+            return parsedVersionString;
 
         }
     }
