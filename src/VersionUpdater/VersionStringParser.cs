@@ -26,7 +26,7 @@ namespace VersionUpdater
                 if (parsedPart ==null)
                 {
                     parsedVersionString.IsValid = false;
-                    parsedVersionString.InvalidReason = @"{versionPart} is invalid";
+                    parsedVersionString.InvalidReason = $"{versionPart} is invalid";
                     return parsedVersionString;
                 }
                 

@@ -11,7 +11,7 @@ namespace VersionUpdater
             var versionString = Console.ReadLine();
             Console.WriteLine("Enter Index to increment, Major:0, Minor:1, Build:2 and Revision:3 ");
             int result;
-            while (!Int32.TryParse(Console.ReadLine(), out result) && result >= 0 && result <= 3)
+            while (!int.TryParse(Console.ReadLine(), out result) || !(result >= 0 && result <= 3))
             {
                 Console.WriteLine(" Please make sure value is in between 0 and 4 ");
             }

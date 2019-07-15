@@ -9,6 +9,8 @@ namespace VersionUpdater
         {
             if (!parsedVersionString.IsValid)
                 throw new ApplicationException("Can't Increment an invalid parsedVersion String");
+            if(indexToStart>parsedVersionString.VersionParts.Count-1)
+                throw new ApplicationException("Index out of Range of parsed version parts");
             var parsedParts = parsedVersionString.VersionParts;
             var indexToWorkOn = indexToStart;
             var startingPoint = parsedParts[indexToWorkOn];
